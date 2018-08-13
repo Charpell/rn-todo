@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Platform, ListView, Keyboard } from 'react-native';
+import { StyleSheet, Text, View, Platform, ListView, Keyboard, AsyncStorage } from 'react-native';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -31,6 +31,18 @@ export default class App extends React.Component {
       items,
       dataSource: this.state.dataSource.cloneWithRows(itemsDatasource),
       ...otherState
+    })
+    AsyncStorage.setItem("items", JSON.stringify(items))
+  }
+
+  componentWillMount() {
+    AsyncStorage.getItem("items").then(json => {
+      try {
+        const items = JSON.parse(json);
+        this.setSource(items, items);
+      } catch(e) {
+
+      }
     })
   }
 
