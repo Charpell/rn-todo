@@ -62,6 +62,13 @@ export default class App extends React.Component {
     this.setSource(newItems, newItems)
   }
 
+  handleRemoveItem = (key) => {
+    const newItems = this.state.items.filter(item => {
+      return item.key !== key
+    })
+    this.setSource(newItems, newItems);
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -81,6 +88,7 @@ export default class App extends React.Component {
               return (
                 <Row 
                   key={key}
+                  onRemove={() => this.handleRemoveItem(key)}
                   onComplete={(complete) => this.handleToggleComplete(key, complete)}
                   {...value}
                 />
