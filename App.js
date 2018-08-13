@@ -102,6 +102,28 @@ export default class App extends React.Component {
     this.setSource(newItems, filterItems(this.state.filter, newItems));
   }
 
+  handleToggleEditing = (key, editing) => {
+    const newItems = this.state.items.map((item) => {
+      if (item.key !== key) return item;
+      return {
+        ...item,
+        editing
+      }
+    })
+    this.setSource(newItems, filterItems(this.state.filter, newItems));
+  }
+
+  handleUpdateText = (key, text) => {
+    const newItems = this.state.items.map((item) => {
+      if (item.key !== key) return item;
+      return {
+        ...item,
+        text
+      }
+    })
+    this.setSource(newItems, filterItems(this.state.filter, newItems));
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -123,6 +145,8 @@ export default class App extends React.Component {
                   key={key}
                   onRemove={() => this.handleRemoveItem(key)}
                   onComplete={(complete) => this.handleToggleComplete(key, complete)}
+                  onUpdate={(text) => this.handleUpdateText(key, text)}
+                  onToggleEdit={(editing) => this.handleToggleEditing(key, editing)}
                   {...value}
                 />
               )
