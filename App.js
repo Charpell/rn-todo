@@ -8,6 +8,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      allComplete: false,
       value: "",
       items: []
     }
@@ -31,6 +32,20 @@ export default class App extends React.Component {
     })
   }
 
+  handleToggleAllComplete = () => {
+    const complete = !this.state.allComplete
+    const newItems = this.state.items.map(item => ({
+      ...item,
+      complete
+    }))
+    // console.table(newItems)
+    
+    this.setState({
+      items: newItems,
+      allComplete: complete
+    })
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -38,6 +53,7 @@ export default class App extends React.Component {
           value={this.state.value}
           onAddItem={this.handleAddItem}
           onChange={(value) => this.setState({ value })}
+          onToggleAllComplete={this.handleToggleAllComplete}
          />
         <View style={styles.content}>
 
