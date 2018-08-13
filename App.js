@@ -5,6 +5,14 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Row from './components/Row';
 
+const filterItems = (filter, items) => {
+  return items.filter(item => {
+    if (filter === 'ALL') return true;
+    if (filter === "COMPLETED") return item.complete;
+    if (filter === "ACTIVE") return !item.complete;
+  })
+}
+
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -12,6 +20,7 @@ export default class App extends React.Component {
     this.state = {
       allComplete: false,
       value: "",
+      filter: "ALL",
       items: [],
       dataSource: ds.cloneWithRows([])
     }
@@ -48,7 +57,7 @@ export default class App extends React.Component {
     }))
     // console.table(newItems)
 
-    this.setSource(newItems, newItems, { allComplete: complete })
+    this.setSource(newItems, filterItems(this.state.filter, newItems), { allComplete: complete })
   }
 
   handleToggleComplete = (key, complete) => {
@@ -59,14 +68,18 @@ export default class App extends React.Component {
         complete
       }
     })
-    this.setSource(newItems, newItems)
+    this.setSource(newItems, filterItems(this.state.filter, newItems))
   }
 
   handleRemoveItem = (key) => {
     const newItems = this.state.items.filter(item => {
       return item.key !== key
     })
-    this.setSource(newItems, newItems);
+    this.setSource(newItems, filterItems(this.state.filter, newItems));
+  }
+
+  handleFilter = (filter) => {
+    this.setSource(this.state.items, filterItems(filter, this.state.items), { filter })
   }
 
   render() {
@@ -99,7 +112,10 @@ export default class App extends React.Component {
             }}
           />
         </View>
-        <Footer />
+        <Footer
+            onFilter={this.handleFilter}
+          filter={this.state.filter}  
+        />
       </View>
     );
   }
