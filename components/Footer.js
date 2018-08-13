@@ -7,6 +7,7 @@ export default class Footer extends Component {
     return (
       <View>
         <View style={styles.container}>
+          <Text> {this.props.count} count </Text>
           <TouchableOpacity style={ filter === 'ALL' && styles.selected } onPress={() => this.props.onFilter("ALL")}>
             <Text>All</Text>
           </TouchableOpacity>

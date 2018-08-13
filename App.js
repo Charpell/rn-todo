@@ -114,7 +114,8 @@ export default class App extends React.Component {
         </View>
         <Footer
             onFilter={this.handleFilter}
-          filter={this.state.filter}  
+          filter={this.state.filter}
+          count={filterItems("ACTIVE", this.state.items).length}  
         />
       </View>
     );
