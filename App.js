@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Platform, ListView, Keyboard, AsyncStorage } from 'react-native';
+import { StyleSheet, Text, View, Platform, ListView, Keyboard, AsyncStorage, ActivityIndicator } from 'react-native';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -18,6 +18,7 @@ export default class App extends React.Component {
     super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
+      loading: true,
       allComplete: false,
       value: "",
       filter: "ALL",
@@ -39,9 +40,11 @@ export default class App extends React.Component {
     AsyncStorage.getItem("items").then(json => {
       try {
         const items = JSON.parse(json);
-        this.setSource(items, items);
+        this.setSource(items, items, { loading: false });
       } catch(e) {
-
+        this.setState({
+          loading: false
+        })
       }
     })
   }
@@ -135,6 +138,12 @@ export default class App extends React.Component {
           count={filterItems("ACTIVE", this.state.items).length}  
           onClearComplete={this.handleClearComplete}
         />
+        { this.state.loading && <View style={styles.loading}>
+          <ActivityIndicator 
+            animating
+            size="large"
+          />
+        </View> }
       </View>
     );
   }
@@ -153,6 +162,16 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1
+  },
+  loading: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(0,0,0,.2)"
   },
   list: {
     backgroundColor: '#FFF'
